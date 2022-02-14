@@ -1,1 +1,23 @@
+# Ignore all
+*
 
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Uignore makefile
+!Makefile
+
+# Ignore execution file
+*.exe
+
+# Ignore contest dir
+contest/*
+
+# Ignore vscode setting
+.vscode/*
+
+# Ignore basic
+단계별 문제/*
