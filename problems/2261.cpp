@@ -68,6 +68,7 @@ int getClosest( point points[], const int n )
         if ( ( (points+i)->x - points[mid].x )*( (points+i)->x - points[mid].x ) < d )
             borderPoints[count++] = points[i];
     }
+
     int db = borderClosest( borderPoints, count, d );
     
     d = d > db ? db : d;
@@ -94,11 +95,9 @@ int borderClosest( point borderPoints[], const int n, const int d )
 
     int min = d;
     for ( int i = 0; i < n; i++ ){
-        for ( int j = i + 1; j < n; j++ ){
-            if ( ( borderPoints[i].y - borderPoints[j].y )*( borderPoints[i].y - borderPoints[j].y ) < min ){
-                int d = dist( borderPoints[i], borderPoints[j] );
-                min = min > d ? d : min;
-            }
+        for ( int j = i + 1; (j < n )&&( ( borderPoints[i].y - borderPoints[j].y )*( borderPoints[i].y - borderPoints[j].y ) < min ); j++ ){
+            int d = dist( borderPoints[i], borderPoints[j] );
+            min = min > d ? d : min;            
         }
     }
     return min;
