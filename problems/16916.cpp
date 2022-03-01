@@ -3,30 +3,36 @@
  * 부분 문자열
  * */
 #include <iostream>
-#include <string>
+#include <cstring>
 using namespace std;
 
-bool KMP( string* txt , string* pat );
-int* computeLPS( string* pat );
+const int BUFSIZE = 1000001;
+
+bool KMP( char* txt , char* pat );
+int* computeLPS( char* pat );
 
 int main( void )
 {
-    string txt, pat;
+    char* txt = new char[BUFSIZE]; memset( txt, 0, BUFSIZE );
+    char* pat = new char[BUFSIZE]; memset( pat, 0, BUFSIZE );
     cin >> txt >> pat;
 
-    cout << KMP( &txt, &pat );
+    cout << KMP( txt, pat );
 }
 
-bool KMP( string* txt , string* pat )
+bool KMP( char* txt , char* pat )
 {
+    // Build LPS
     int* lps = computeLPS( pat );
-    const int TXTSIZE = txt->length();
-    const int PATSIZE = pat->length();
+
+    // Caculate
+    const int TXTSIZE = strlen(txt);
+    const int PATSIZE = strlen(pat);
 
     int txtIdx = 0;
     int patIdx = 0;
     while ( txtIdx < TXTSIZE ){
-        while ( txtIdx < TXTSIZE && patIdx < PATSIZE && txt->at(txtIdx) == pat->at(patIdx) ){
+        while ( txtIdx < TXTSIZE && patIdx < PATSIZE && txt[txtIdx] == pat[patIdx] ){
             patIdx++;
             txtIdx++;
         }
@@ -35,7 +41,7 @@ bool KMP( string* txt , string* pat )
             patIdx = lps[patIdx-1];
             return true;
         }
-        else {
+        else { // patidx < PATSIZE
             if ( patIdx > 0 )
                 patIdx = lps[patIdx-1];
             else 
@@ -45,10 +51,9 @@ bool KMP( string* txt , string* pat )
 
     return false;
 }
-
-int* computeLPS( string* pat )
+int* computeLPS( char* pat )
 {
-    const int SIZE = pat->length();
+    const int SIZE = strlen(pat);
     int* lps = new int[SIZE];
     int len = 0;
 
@@ -65,7 +70,7 @@ int* computeLPS( string* pat )
                 lps[i] = 0;
                 i++;
             }
-            else 
+            else
                 len = lps[len-1];
         }
     }
