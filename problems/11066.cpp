@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-const int INF = 5000001; // 5,000,001
+const int INF = 1252490001; // 1,252,490,000 + 1
 
 int dp[501][501];
 int segSum[501][501];
