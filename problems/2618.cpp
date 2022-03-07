@@ -12,10 +12,6 @@ struct point {
     int x;
     int y;
 };
-struct rst {
-    int sum;
-    string seq;
-};
 
 int getCost( point* points, int pa, int pb );
 int solve( point* points, int** dp, int W, int trg_event, int a, int b );
