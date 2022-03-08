@@ -73,12 +73,12 @@ int main( void )
                         ans = false;
                         break;
                     }
-                    else if ( vColor[curEdge->dst] == 0 ){ // Both vertices are diff sets
+                    else if ( vColor[curEdge->dst] == 0 ){ // Non-visited vertice, assign to diff set
                         Q.push( curEdge->dst );
                         vColor[curEdge->dst] = -vColor[srcV];
                     }
 
-                    curEdge =  curEdge->nextNode;
+                    curEdge = curEdge->nextNode;
                 }
             }
         }
