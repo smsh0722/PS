@@ -22,7 +22,15 @@ int main( void )
     for ( int testI = 1; testI <= K; testI++ ){
         cin >> V >> E;
 
+        /* 0 = Non-visited
+         * 1 = set-A
+         * -1 = set-B
+         * */
         int vColor[V+1] = { 0 };
+
+        /* Adjacency List
+         * src[dst] = src to dst
+         * */
         node** src = new node*[V+1];
         for ( int i = 0; i <= V; i++ ){
             src[i] = nullptr;
@@ -47,28 +55,30 @@ int main( void )
         }
 
         // BFS
-        bool ans = true;
-        queue<int> Q;
+        bool ans = true; // Final Answer
+        queue<int> Q;   // Queue for BFS
         for ( int i = 1; i <= V; i++ ){
+            // Check is visited
             if ( vColor[i] != 0 )
                 continue;
+            
             // Search Non-visited Vertice
             Q.push( i );
             vColor[i] = {1};
             while ( ans == true && Q.empty() == false ){
                 int srcV = Q.front(); Q.pop();
-                node* curNode = src[srcV];
-                while ( curNode != nullptr ){
-                    if ( vColor[curNode->dst] == vColor[srcV] ){
+                node* curEdge = src[srcV];
+                while ( curEdge != nullptr ){
+                    if ( vColor[curEdge->dst] == vColor[srcV] ){ // Both vertices are same set
                         ans = false;
                         break;
                     }
-                    else if ( vColor[curNode->dst] == 0 ){
-                        Q.push( curNode->dst );
-                        vColor[curNode->dst] = -vColor[srcV];
+                    else if ( vColor[curEdge->dst] == 0 ){ // Both vertices are diff sets
+                        Q.push( curEdge->dst );
+                        vColor[curEdge->dst] = -vColor[srcV];
                     }
 
-                    curNode =  curNode->nextNode;
+                    curEdge =  curEdge->nextNode;
                 }
             }
         }
@@ -78,8 +88,7 @@ int main( void )
             cout << "YES\n";
         else 
             cout << "NO\n";
-        
-
+    
         // Delete to avoid mem leaks
         for ( int i = 1; i <= V; i++ ){
             node* curNode = src[i];
