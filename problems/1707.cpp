@@ -6,9 +6,9 @@
 #include <queue>
 using namespace std;
 
-struct node{
+struct edge{
     int dst;
-    node* nextNode;
+    edge* nextNode;
 };
 
 int main( void )
@@ -31,7 +31,7 @@ int main( void )
         /* Adjacency List
          * src[dst] = src to dst
          * */
-        node** src = new node*[V+1];
+        edge** src = new edge*[V+1];
         for ( int i = 0; i <= V; i++ ){
             src[i] = nullptr;
         }
@@ -40,13 +40,13 @@ int main( void )
         int a, b;
         for ( int i = 0; i < E; i++ ){
             cin >> a >> b;
-            node* a2b = new node;
+            edge* a2b = new edge;
             {
                 a2b->dst = b;
                 a2b->nextNode = src[a];
                 src[a] = a2b;
             }
-            node* b2a = new node;
+            edge* b2a = new edge;
             {
                 b2a->dst = a;
                 b2a->nextNode = src[b];
@@ -67,7 +67,7 @@ int main( void )
             vColor[i] = {1};
             while ( ans == true && Q.empty() == false ){
                 int srcV = Q.front(); Q.pop();
-                node* curEdge = src[srcV];
+                edge* curEdge = src[srcV];
                 while ( curEdge != nullptr ){
                     if ( vColor[curEdge->dst] == vColor[srcV] ){ // Both vertices are same set
                         ans = false;
@@ -91,8 +91,8 @@ int main( void )
     
         // Delete to avoid mem leaks
         for ( int i = 1; i <= V; i++ ){
-            node* curNode = src[i];
-            node* nextNode;
+            edge* curNode = src[i];
+            edge* nextNode;
             while( curNode != nullptr ){
                 nextNode = curNode->nextNode;
                 delete curNode;
