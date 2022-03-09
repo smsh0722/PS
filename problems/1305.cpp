@@ -24,8 +24,10 @@ int main( void )
                 i++;
             }
             else {
-                if ( len == 0 )
+                if ( len == 0 ){
+                    lps[i] = 0;
                     i++;
+                }
                 else 
                     len = lps[len-1];
             }
