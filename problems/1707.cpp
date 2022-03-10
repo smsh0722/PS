@@ -8,7 +8,7 @@ using namespace std;
 
 struct edge{
     int dst;
-    edge* nextNode;
+    edge* nextEdge;
 };
 
 int main( void )
@@ -28,12 +28,9 @@ int main( void )
          * */
         int vColor[V+1] = { 0 };
 
-        /* Adjacency List
-         * src[dst] = src to dst
-         * */
-        edge** src = new edge*[V+1];
+        edge** adjList = new edge*[V+1];
         for ( int i = 0; i <= V; i++ ){
-            src[i] = nullptr;
+            adjList[i] = nullptr;
         }
 
         // Input
@@ -43,14 +40,14 @@ int main( void )
             edge* a2b = new edge;
             {
                 a2b->dst = b;
-                a2b->nextNode = src[a];
-                src[a] = a2b;
+                a2b->nextEdge = adjList[a];
+                adjList[a] = a2b;
             }
             edge* b2a = new edge;
             {
                 b2a->dst = a;
-                b2a->nextNode = src[b];
-                src[b] = b2a;
+                b2a->nextEdge = adjList[b];
+                adjList[b] = b2a;
             }
         }
 
@@ -67,7 +64,7 @@ int main( void )
             vColor[i] = {1};
             while ( ans == true && Q.empty() == false ){
                 int srcV = Q.front(); Q.pop();
-                edge* curEdge = src[srcV];
+                edge* curEdge = adjList[srcV];
                 while ( curEdge != nullptr ){
                     if ( vColor[curEdge->dst] == vColor[srcV] ){ // Both vertices are same set
                         ans = false;
@@ -78,7 +75,7 @@ int main( void )
                         vColor[curEdge->dst] = -vColor[srcV];
                     }
 
-                    curEdge = curEdge->nextNode;
+                    curEdge = curEdge->nextEdge;
                 }
             }
         }
@@ -91,10 +88,10 @@ int main( void )
     
         // Delete to avoid mem leaks
         for ( int i = 1; i <= V; i++ ){
-            edge* curNode = src[i];
+            edge* curNode = adjList[i];
             edge* nextNode;
             while( curNode != nullptr ){
-                nextNode = curNode->nextNode;
+                nextNode = curNode->nextEdge;
                 delete curNode;
                 curNode = nextNode;
             }
