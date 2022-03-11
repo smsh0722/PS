@@ -88,12 +88,12 @@ int main( void )
     
         // Delete to avoid mem leaks
         for ( int i = 1; i <= V; i++ ){
-            edge* curNode = adjList[i];
-            edge* nextNode;
-            while( curNode != nullptr ){
-                nextNode = curNode->nextEdge;
-                delete curNode;
-                curNode = nextNode;
+            edge* curEdge = adjList[i];
+            edge* nextEdge;
+            while( curEdge != nullptr ){
+                nextEdge = curEdge->nextEdge;
+                delete curEdge;
+                curEdge = nextEdge;
             }
         }
     }
