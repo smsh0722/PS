@@ -1,4 +1,4 @@
 # PS
-Problem Solving
+Problem Solving (BOJ)
 
-My solutions(BOJ)
+My solutions
