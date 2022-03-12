@@ -1,4 +1,4 @@
 # PS
 Problem Solving
 
-My solutoins(BOJ)
+My solutions(BOJ)
