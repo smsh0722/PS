@@ -51,17 +51,17 @@ bool solve_sudoku( int blanks[81][2], int blanks_size, int idx )
         board[curR][curC] = i; // Temp ans
 
         // Check tmp answer
-        if ( checkBox( curR, curC ) == false )
-            continue;
         if ( checkRow( curR ) == false )
             continue;
         if ( checkColumn( curC ) == false )
             continue;
+        if ( checkBox( curR, curC ) == false )
+            continue;
         
         // Solve next Blanks
-        if ( idx + 1 < blanks_size && solve_sudoku( blanks, blanks_size, idx + 1 ) == true )
+        if ( idx + 1 == blanks_size )
             return true;
-        else if ( idx + 1 == blanks_size )
+        else if ( solve_sudoku( blanks, blanks_size, idx + 1 ) == true )
             return true;
     }
 
@@ -107,7 +107,6 @@ bool checkRow( int curR )
 }
 bool checkColumn( int curC )
 {
-
     bool flag[10] = {false};
     for ( int r = 0; r < 9; r++ ){
         int trgVal = board[r][curC];
