@@ -104,16 +104,16 @@ void DFS( bool* visited, int curNode, int* count, int curLevel )
     // DFS
     edge* curEdge = adjList[curNode];
     while ( curEdge != nullptr ){
-        if ( visited[curEdge->trgNode] == true ){
-            curEdge = curEdge->nextEdge;
-            continue;
+        if ( visited[curEdge->trgNode] == false ){
+
+            DFS( visited, curEdge->trgNode, count, curLevel+1 );
+            dfsLog_node[*count] = curNode;
+            dfsLog_level[*count] = curLevel;
+
+            ++(*count);
         }
-
-        DFS( visited, curEdge->trgNode, count, curLevel+1 );
-        dfsLog_node[*count] = curNode;
-        dfsLog_level[*count] = curLevel;
-
-        ++(*count);
+        
+        curEdge = curEdge->nextEdge;
     }
 }
 int constructSTUtil( int idx, int l, int r )
