@@ -1,3 +1,7 @@
+/* smsh0722
+ * 1761
+ * 정점들의 거리
+ * */
 #include <iostream>
 #include <cstring>
 #include <cmath>
@@ -13,8 +17,8 @@ struct edge {
 edge** adjList;         // Adjacency List
 int* distFromRoot;      // Distance(weight) of each Node from root
 int* firstOccurOfNode; // First occurrence of each Node
-int* dfsLog;         // Node at each occurrence
-int* levelOfNode;    // Level of each Node
+int* dfsLog_node;      // Node at each occurrence
+int* dfsLog_level;    // Level at each occureence
 int* ST;             // Segment Tree
 
 void DFS( bool* visited, int curNode, int* count, int curLevel );
@@ -49,8 +53,8 @@ int main( void )
         distFromRoot = new int[N+1];
         memset( distFromRoot, 0, sizeof(int)*(N+1) );
         firstOccurOfNode = new int[N+1];
-        dfsLog = new int[2*N-1];
-        levelOfNode = new int[N+1];
+        dfsLog_node = new int[2*N-1];
+        dfsLog_level = new int[2*N-1];
 
         int count = 0;
 
@@ -74,7 +78,7 @@ int main( void )
     {
         int M;
         cin >> M;
-
+        
         int a, b;
         for ( int i = 0; i < M; i++ ){
             cin >> a >> b;
@@ -84,20 +88,20 @@ int main( void )
                 b = tmp;
             }
 
-            int lca = dfsLog[ getMinST( 0, 0, 2*N-1-1, firstOccurOfNode[a], firstOccurOfNode[b] ) ];
+            int lca = dfsLog_node[ getMinST( 0, 0, 2*N-1-1, firstOccurOfNode[a], firstOccurOfNode[b] ) ];
 
             cout << (distFromRoot[a] + distFromRoot[b] - 2*distFromRoot[lca]) << "\n";
         }
     }
-    
     return 0;
 }
 void DFS( bool* visited, int curNode, int* count, int curLevel )
 {
     firstOccurOfNode[curNode] = *count; // Set firstOccurOfNode
-    dfsLog[(*count)++] = curNode; // Set dfsLog
-    levelOfNode[curNode] = curLevel; // Set Level to curNode
+    dfsLog_node[*count] = curNode; // Set dfsLog_node
+    dfsLog_level[*count] = curLevel; // Set dfsLog_level
     visited[curNode] = true;
+    ++(*count);
 
     // DFS
     edge* curEdge = adjList[curNode];
@@ -109,7 +113,10 @@ void DFS( bool* visited, int curNode, int* count, int curLevel )
 
         distFromRoot[curEdge->trgNode] = distFromRoot[curNode] + curEdge->dist; // set Dist
         DFS( visited, curEdge->trgNode, count, curLevel + 1 ); // DFS
-        dfsLog[(*count)++] = curNode;
+
+        dfsLog_node[*count] = curNode;
+        dfsLog_level[*count] = curLevel;
+        ++(*count);
 
         curEdge = curEdge->nextEdge;
     }
@@ -126,7 +133,7 @@ int constructSTUtil( int idx, int l, int r )
     int lval = constructSTUtil( idx*2+1, l, mid );
     int rval = constructSTUtil( idx*2+2, mid+1, r );
 
-    ST[idx] = levelOfNode[dfsLog[lval]] < levelOfNode[dfsLog[rval]] ? lval : rval;
+    ST[idx] = dfsLog_level[lval] < dfsLog_level[rval] ? lval : rval;
     return ST[idx];
 }
 int getMinST( int idx, int l, int r, int trgL, int trgR )
@@ -148,5 +155,5 @@ int getMinST( int idx, int l, int r, int trgL, int trgR )
     if ( rval == INF )
         return lval;
     
-    return ( levelOfNode[dfsLog[lval]] < levelOfNode[dfsLog[rval]] ? lval : rval );
+    return ( dfsLog_level[lval] < dfsLog_level[rval] ? lval : rval );
 }
