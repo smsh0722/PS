@@ -76,16 +76,16 @@ int main (void )
     cin >> M;
     {
         int r, u, v;
-        int lcaList[3];
+        int lcaList[3]; // (r, u), (r, v), (u, v)
         int trgR, trgL;
         for ( int i = 0; i < M; i++ ){
             cin >> r >> u >> v;
 
             getTrgRange( &trgL, &trgR, r, u );
             lcaList[0] = dfsLog_node[ getMinLevelIdxST( 0, 0, 2*N-1-1, trgL, trgR ) ];
-            getTrgRange( &trgL, &trgR, u, v );
+            getTrgRange( &trgL, &trgR, r, v );
             lcaList[1] = dfsLog_node[ getMinLevelIdxST( 0, 0, 2*N-1-1, trgL, trgR ) ];
-            getTrgRange( &trgL, &trgR, v, r );
+            getTrgRange( &trgL, &trgR, u, v );
             lcaList[2] = dfsLog_node[ getMinLevelIdxST( 0, 0, 2*N-1-1, trgL, trgR ) ];
 
             cout << selectAns( lcaList ) << "\n";
@@ -165,22 +165,13 @@ void getTrgRange( int* trgL, int* trgR, int nodeA, int nodeB )
 }
 int selectAns( int lcaList[3] )
 {
-    bool ab = lcaList[0] == lcaList[1];
-    bool bc = lcaList[1] == lcaList[2];
-
-    // All equal
-    if ( ( ab&bc )== true )
-        return lcaList[0];
-
-    // x == y, y != z
-    bool ca = lcaList[2] == lcaList[0];
-     
-    if ( ab == true )
+    // lca(r, u) == lca(r, v) : No change
+    if ( lcaList[0] == lcaList[1] )
         return lcaList[2];
-    else if ( bc == true )
-        return lcaList[0];
-    else if ( ca == true )
-        return lcaList[1];
 
-    return -1; // error
+    // (r,u) != ( r, v) : change in lca
+    if( lcaList[0] == lcaList[2] )
+        return lcaList[1];
+    // lcaList[1] == lcaList[2]
+    return lcaList[0];
 }
