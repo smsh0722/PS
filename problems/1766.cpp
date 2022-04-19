@@ -57,13 +57,14 @@ int main ( void )
                 bfs_q.push(-i);
         }
 
+        // BFS
         while ( bfs_q.empty() == false ){
             int curNode = bfs_q.top(); bfs_q.pop();
             curNode = -curNode;
 
             sorted_order.push(curNode);
             
-            // BFS adjList
+            // Check adjList
             edge* curEdge = adjList[curNode];
             while( curEdge != nullptr ){
                 --in_degree[curEdge->dst];
