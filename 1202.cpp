@@ -50,11 +50,11 @@ int main( void )
     }
 
     int64_t sum = 0;
-    priority_queue<int> pq;
     {
         int gemIdx = 0;
+        priority_queue<int> pq;
 
-        for ( int i = 0; i < K; i++ ){
+        while ( bags.empty() == false ){
             int c = -bags.top();
             bags.pop();
 
