@@ -17,7 +17,7 @@ struct point {
 
 bool xAsc_Comp( point p, point q );
 bool yAsc_xDes_comp( point p, point q );
-int* constructST( int x_range );
+void constructST( int** ST, int x_range );
 int sumST( int* ST, int idx, int l, int r, int trgL, int trgR );
 int updateST( int* ST, int idx, int l, int r, int trg, int gap );
 
@@ -61,7 +61,7 @@ int main( void )
         // Solve
         {
             int* ST;
-            ST = constructST( x_range );
+            constructST( &ST, x_range );
 
             for ( int i = 0; i < N; i++ ){
                 sum += (int64_t)sumST( ST, 0, 0, x_range, points[i].x_rank, x_range );
@@ -90,18 +90,14 @@ bool yAsc_xDes_comp( point p, point q )
         return p.x > q.x;
     return p.y < q.y;
 }
-int* constructST( int x_range )
+void constructST( int** ST, int x_range )
 {
-    int* ST;
-
     int x_size = x_range + 1;
     int h = ceil( log2(x_size) );
     int size = (1<<(h+1))-1;
 
-    ST = new int[size];
-    memset( ST, 0, sizeof(int)*size );
-    
-    return ST;
+    *ST = new int[size];
+    memset( *ST, 0, sizeof(int)*size );
 }
 int sumST( int* ST, int idx, int l, int r, int trgL, int trgR )
 {
