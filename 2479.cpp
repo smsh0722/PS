@@ -18,7 +18,6 @@ int K;
 struct bfs_data{
     int nodeNum;
     int dist;
-    string seq;
 };
 
 int calHammingDistance( bool** binary_codes, int a, int b );
@@ -39,7 +38,7 @@ int main( void )
             for ( int c = 0; c < K; c++ ){
                 char bit;
                 cin >> bit;
-                binary_codes[r][c] = bit == '1';
+                binary_codes[r][c] = (bit - '0');
             }
         }
     }
@@ -50,7 +49,7 @@ int main( void )
     int** HD_matrix;
     {
         HD_matrix = new int*[N+1];
-        for ( int i = 1; i <= N; i++ ){
+        for ( int i = 0; i <= N; i++ ){
             HD_matrix[i] = new int[N+1];
             memset( HD_matrix[i], 0, sizeof(int)*(N+1) );
         }
@@ -65,12 +64,16 @@ int main( void )
         }
     }
 
-    string seq;
+    int* p;
+    int path_size = INF;
 
     int sPoint, ePoint;
     cin >> sPoint >> ePoint;
     /* solve */
     {
+        p = new int[N+1];
+        memset( p, 0, sizeof(int)*(N+1) );
+
         queue<bfs_data> q;
         
         bool* visited;
@@ -79,22 +82,22 @@ int main( void )
             memset( visited, false, N+1 );
         }
 
-        int minHD = INF;
-        q.push( bfs_data{sPoint, 0, to_string(sPoint) });
+        q.push( bfs_data{sPoint, 1 });
         visited[ sPoint ] = true;
-        while ( q.empty() == false && minHD == INF ){
+        while ( q.empty() == false ){
             bfs_data cur_data = q.front();
             q.pop();
 
+            if ( cur_data.nodeNum == ePoint ){
+                path_size = cur_data.dist;
+                break;
+            }
+
             for ( int dst = 1; dst <= N; dst++ ){
                 if ( HD_matrix[cur_data.nodeNum][dst] == 1 ){
-                    if ( dst == ePoint ){
-                        minHD = cur_data.dist + 1;
-                        seq = cur_data.seq + to_string(dst);
-                        break;
-                    }
-                    else if ( visited[dst] == false ){
-                        q.push( bfs_data{ dst, cur_data.dist+1, cur_data.seq + to_string(dst) } );
+                    if ( visited[dst] == false ){
+                        p[dst] = cur_data.nodeNum;
+                        q.push( bfs_data{ dst, (cur_data.dist + 1) } );
                         visited[dst] = true;
                     }
                 }
@@ -104,11 +107,22 @@ int main( void )
         delete[] visited;
     }
     
-    if ( seq.size() == 0 )
-        cout << "-1";
+    // Print result
+    if ( path_size == INF )
+        cout << -1;
     else {
-        for ( int i = 0; i < seq.size(); i++ )
-            cout << seq.at(i) << " ";
+        stack<int> s;
+        int cur = ePoint;
+        while ( cur != sPoint ){
+            s.push( cur );
+            cur = p[cur];           
+        }
+        s.push(cur);
+
+        while ( s.empty() == false ){
+            cout << s.top() << " ";
+            s.pop();
+        }
     }
 
     return 0;
@@ -118,7 +132,7 @@ int calHammingDistance( bool** binary_codes, int a, int b )
 {
     int hd_count = 0;
     for ( int i = 0; i < K; i++ )
-        hd_count += binary_codes[a][i] != binary_codes[b][i] ? 1 : 0;
+        hd_count += int(binary_codes[a][i] ^ binary_codes[b][i]);
     
     return hd_count;
 }
