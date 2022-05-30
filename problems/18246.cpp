@@ -138,10 +138,8 @@ void SegmentTree2D::construct( int rIdx, int cIdx, int l, int r, int c, int** va
 }
 int SegmentTree2D::getMax2D( int cIdx, Point s, Point e, Point trgS, Point trgE )
 {
-    if ( trgS.c <= s.c && e.c <= trgE.c ){
-        int val = ST[0][cIdx];
+    if ( trgS.c <= s.c && e.c <= trgE.c )
         return getMax( 0, cIdx, s.r, e.r, trgS.r, trgE.r );
-    }
     if ( trgE.c < s.c || e.c < trgS.c )
         return 0;
 
