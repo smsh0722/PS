@@ -11,8 +11,8 @@ K: number of seq
 int T, N, K;
 
 int FindEffiBuildTime( int* buildTimeArr
-        , vector<int>* buildSeqMat
-        , int* buildSeqMemo
+        , vector<vector<int>>& buildSeqMat
+        , int* buildEffiTimeMemo
         , int trgBuilding 
     );
 
@@ -25,10 +25,10 @@ int main ( void )
         cin >> N; cin >> K;
 
         int* buildTimeArr = new int[N];
-        vector<int>* buildSeqMat = new vector<int>[N];
-        int* buildSeqMemo = new int[N];
+        vector<vector<int>> buildSeqMat(N);
+        int* buildEffiTimeMemo = new int[N];
         for ( int i = 0; i < N; i++ )
-            buildSeqMemo[i] = -1;
+            buildEffiTimeMemo[i] = -1;
 
         {
             int time = 0;  
@@ -41,41 +41,39 @@ int main ( void )
             int parent, child;
             for ( int i = 0; i < K; i++ ){
                 cin >> parent >> child;
-                parent--; child--;
-                buildSeqMat[child].push_back(parent);
+                buildSeqMat[child-1].push_back(parent-1);
             }
         }
-        int targetBuilding = -1;
+
+        int targetBuilding; 
         cin >> targetBuilding;
         
-        cout << FindEffiBuildTime( buildTimeArr, buildSeqMat, buildSeqMemo, targetBuilding-1 ) 
+        cout << FindEffiBuildTime( buildTimeArr, buildSeqMat, buildEffiTimeMemo, targetBuilding-1 ) 
             << endl;
         
         delete[] buildTimeArr;
-        delete[] buildSeqMemo;
-        delete[] buildSeqMat;
+        delete[] buildEffiTimeMemo;
     }
 }   
 
 int FindEffiBuildTime( int* buildTimeArr
-        , vector<int>* buildSeqMat
-        , int* buildSeqMemo
+        , vector<vector<int>>& buildSeqMat
+        , int* buildEffiTimeMemo
         , int trgBuilding 
     )
 {
-    int parent_size = buildSeqMat[trgBuilding].size();
-    int max_time = 0;
-
-    for ( int i = 0; i < parent_size; i++ ){
+    int maxTime = 0;
+    int parentSize = buildSeqMat[trgBuilding].size();
+    for ( int i = 0; i < parentSize; i++ ){
         int pNum = buildSeqMat[trgBuilding][i];
-        if (buildSeqMemo[pNum] == -1)
-            FindEffiBuildTime( buildTimeArr, buildSeqMat, buildSeqMemo, pNum );
+        if ( buildEffiTimeMemo[pNum] == -1 )
+            FindEffiBuildTime( buildTimeArr, buildSeqMat, buildEffiTimeMemo, pNum );
         
-        if ( max_time < buildSeqMemo[pNum] )
-            max_time = buildSeqMemo[pNum];
+        if ( maxTime < buildEffiTimeMemo[pNum] )
+            maxTime = buildEffiTimeMemo[pNum];
     }
 
-    buildSeqMemo[trgBuilding] = max_time + buildTimeArr[trgBuilding];
+    buildEffiTimeMemo[trgBuilding] = maxTime + buildTimeArr[trgBuilding];
 
-    return buildSeqMemo[trgBuilding];
+    return buildEffiTimeMemo[trgBuilding];
 }
